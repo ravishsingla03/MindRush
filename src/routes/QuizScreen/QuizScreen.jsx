@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { io } from "socket.io-client";
 import "./QuizScreen.css";
 
 
 function QuizScreen() {
+  const currentTime = new Date().getTime();
+
   const [roomId, setRoomId] = useState("ABCD");
   const [playerName, setPlayerName] = useState("Player 1");
   const [question, setQuestion] = useState({
@@ -11,25 +12,16 @@ function QuizScreen() {
     options: ["Berlin", "Madrid", "Paris", "Rome"],
     correct: "Paris",
   },
-);
+  );
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [timeTaken, setTimetaken] = useState(0);
   const [timeLeft, setTimeLeft] = useState(10);
 
-  useEffect(() => {
-    // Countdown timer
-    if (timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [timeLeft]);
-
-
-
   const handleAnswerSelect = (answer) => {
     setSelectedAnswer(answer);
-    setTimetaken(10 - timeLeft);
-    console.log("Time taken:", 10 - timeLeft);
+    const selectedTime = new Date().getTime();
+    setTimetaken(selectedTime - currentTime);
+    console.log("Time taken:", (selectedTime - currentTime));
     console.log("Answer selected:", answer);
   };
 
@@ -62,7 +54,7 @@ function QuizScreen() {
           </button>
         ))}
       </div>
-     
+
     </div>
   );
 }

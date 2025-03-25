@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import WaitingScreen from "./routes/WaitingScreen/waitingScreen";
 import HomeScreen from "./routes/HomeScreen/homeScreen";
 import QuizScreen from "./routes/QuizScreen/QuizScreen";
+import { SocketManager } from "./Components/SocketManger";
 const router = createBrowserRouter([
     {
         path: "/waiting",
@@ -22,7 +23,10 @@ const router = createBrowserRouter([
 
 function App(){
    return (
+       <>
+       <SocketManager></SocketManager>
     <RouterProvider router={router} />
+       </>
    );
     
 };

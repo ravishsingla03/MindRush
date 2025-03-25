@@ -11,9 +11,9 @@ io.on("connection", (socket) => {
 
     socket.on("create-room", () => {
         const roomCode = Math.random().toString(36).substring(7).toUpperCase();
-        rooms[roomCode] = { players: [socket.id] };
+        rooms[roomCode] = { host: [socket.id] ,players: [socket.id] };
         socket.join(roomCode);
-        socket.emit("room-created", { roomCode, players: rooms[roomCode].players });
+        // socket.emit("room-created", { roomCode, players: rooms[roomCode].players });
         console.log(rooms);
     });
     
@@ -26,7 +26,7 @@ io.on("connection", (socket) => {
             // console.log(`Player ${socket.id} joined room ${roomCode}`);
             
             // Send updated player list to ALL clients in the room
-            io.to(roomCode).emit("player-joined", { players: rooms[roomCode].players });
+            io.to(roomCode).emit("player-joined", { players: rooms[roomCode].players, roomCode });
         } else {
             socket.emit("room-error", { message: "Room not found" });
         }

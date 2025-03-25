@@ -1,23 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import { useLocation } from "react-router-dom";
 import "./waitingScreen.scss"; // Import SCSS file
+import { socket } from "../../Components/SocketManger";
 
 
 
 function WaitingScreen() {
+  const [roomCode,setRoomCode] = useState();
+  const [isHost,setIsHost] = useState(true);
+
+  useEffect(()=>{
+    socket.on("room-created",({roomCode,players})=>{
+      console.log("Room created with code:",roomCode);
+      setRoomCode(roomCode);
+      setPlayers(players);
+    });
+    socket.on("player-joined", ({ players,roomCode }) => {
+      console.log("Updated players list:", players);
+      setPlayers(players);
+      setRoomCode(roomCode);
+    });
+  },[]);
 
 
-
-const [roomCode,setRoomCode] = useState("");
-const [isHost,setIsHost] = useState(true);
 
   const [players, setPlayers] = useState([
-    "Player 1",
-    "Player 2",
-    "Player 3",
-    "Player 4",
-    "Player 5",
-    "Player 6",
   ]);
 
   const handleStartGame = () => {
