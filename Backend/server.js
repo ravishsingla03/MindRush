@@ -18,17 +18,26 @@ io.on("connection", (socket) => {
     });
     
     socket.on("join-room", ({ roomCode }) => {
-        console.log(rooms);
         if (rooms[roomCode]) {
+            //todo: if it is not present in any room then add if yes then first remove it from that
+             
             rooms[roomCode].players.push(socket.id);
             socket.join(roomCode);
-            console.log(`Player ${socket.id} joined room ${roomCode}`);
+            // console.log(`Player ${socket.id} joined room ${roomCode}`);
             
             // Send updated player list to ALL clients in the room
             io.to(roomCode).emit("player-joined", { players: rooms[roomCode].players });
         } else {
             socket.emit("room-error", { message: "Room not found" });
         }
+        console.log(rooms);
+    });
+
+    socket.on("start-game",async ({ roomCode }) => {
+        io.to(roomCode).emit("game-started");
+        var questions = await fetch("https://opentdb.com/api.php?amount=20&category=18")
+        questions = await questions.json();
+        io.to(roomCode).emit("questions", questions);
     });
 
     socket.on("disconnect", () => {
@@ -36,7 +45,10 @@ io.on("connection", (socket) => {
         // Remove player from rooms when they disconnect
         for (const roomCode in rooms) {
             rooms[roomCode].players = rooms[roomCode].players.filter(player => player !== socket.id);
-            io.to(roomCode).emit("player-joined", { players: rooms[roomCode].players });
+            if(rooms[roomCode].players.length === 0) {
+                delete rooms[roomCode];
+            }
         }
+        // Send updated player list to ALL clients in the room
     });
 });

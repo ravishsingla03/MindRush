@@ -1,0 +1,106 @@
+/* Main Container */
+.quiz-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: radial-gradient(circle, #1a1a1a, #000);
+    color: #ffffff;
+    font-family: "Poppins", sans-serif;
+    text-align: center;
+    position: relative;
+  }
+  
+  /* Timer & Room Info */
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 600px;
+    margin-bottom: 10px;
+  }
+  
+  .timer {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff9800;
+  }
+  
+  .room-info {
+    font-size: 1.2rem;
+    color: #bdbdbd;
+  }
+  
+  .room-info span {
+    font-weight: bold;
+    color: #ff9800;
+  }
+  
+  /* Player Name */
+  .player-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  /* Question Box */
+  .question-box {
+    width: 80%;
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Options Container */
+  .options-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+    width: 80%;
+    max-width: 600px;
+  }
+  
+  .option-btn {
+    padding: 12px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, background 0.3s ease-in-out;
+  }
+  
+  .option-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #4caf50, #2196f3);
+  }
+  
+  .option-btn.selected {
+    background: linear-gradient(45deg, #ff9800, #ff5722);
+  }
+  
+  /* Player List */
+  
+  .player-list h3 {
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+  
+  .player-item {
+    font-size: 1rem;
+    color: #bdbdbd;
+    padding: 5px 0;
+  }
+  
