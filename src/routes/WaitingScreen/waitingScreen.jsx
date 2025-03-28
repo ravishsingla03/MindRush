@@ -1,35 +1,60 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import "./waitingScreen.scss"; // Import SCSS file
 import { socket } from "../../Components/SocketManger";
 
 
 
 function WaitingScreen() {
-  const [roomCode,setRoomCode] = useState();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const roomCode = searchParams.get('room');
   const [isHost,setIsHost] = useState(true);
-
-  useEffect(()=>{
-    socket.on("room-created",({roomCode,players})=>{
-      console.log("Room created with code:",roomCode);
-      setRoomCode(roomCode);
-      setPlayers(players);
-    });
-    socket.on("player-joined", ({ players,roomCode }) => {
-      console.log("Updated players list:", players);
-      setPlayers(players);
-      setRoomCode(roomCode);
-    });
-  },[]);
-
-
-
   const [players, setPlayers] = useState([
   ]);
 
+  
+  useEffect(() => {
+    // Emit only once when component mounts
+    socket.emit("send-data", { roomCode });
+
+    // Set up listener
+    const handleReceiveData = ({ data }) => {
+      if(data.host[0] !== socket.id){
+        setIsHost(false);
+      }
+      setPlayers(data.players);
+    };
+    
+
+    socket.on("recieve-data", handleReceiveData);
+
+    socket.on("player-disconnect",({data})=>{
+      setPlayers(data.players);
+    })
+
+    socket.on("host-disconnect",()=>{
+      alert("Host has disconnected! You can join other room");
+      navigate("/");
+    });
+
+    socket.on("game-started",()=>{
+      navigate("/quiz?room="+roomCode);
+    })
+
+    // Cleanup listener when component unmounts
+    return () => {
+      socket.off("recieve-data", handleReceiveData);
+    };
+  }, [navigate, roomCode]); 
+
+  
+  
+
+
   const handleStartGame = () => {
     console.log("Game Started!");
-    // Add WebSocket event here to notify all players that the game is starting
+    socket.emit("start-game",{roomCode});
   };
 
   return (

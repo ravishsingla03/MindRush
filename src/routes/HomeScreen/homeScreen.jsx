@@ -12,37 +12,13 @@ function HomeScreen() {
     const [isHost, setIsHost] = useState(false);
     const [players, setPlayers] = useState([]);
 
-    // useEffect(() => {
-    //     // Handle when a player joins
-    //     socket.on("player-joined", ({ players }) => {
-    //         console.log("Updated players list:", players);
-    //         setPlayers(players);
-    //     });
-
-    //     // Handle room creation
-    //     socket.on("room-created", ({ roomCode, players }) => {
-    //         setRoomCode(roomCode);
-    //         setIsHost(true);
-    //         setPlayers(players);
-
-    //     });
-
-    //     // Handle successful join-room response
-    //     socket.on("room-joined", ({ roomCode, players }) => {
-    //         setRoomCode(roomCode);
-    //         setPlayers(players);
-    //     });
-
-    //     return () => {
-    //         socket.off("player-joined");
-    //         socket.off("room-created");
-    //         socket.off("room-joined");
-    //     };
-    // }, []);
 
     const createRoom = () => {
         socket.emit("create-room");
-        navigate("/waiting");
+         socket.once("room-created",({roomCode})=>{
+            setRoomCode(roomCode);
+            navigate(`/waiting?room=${roomCode}`);
+        })
     };
 
     const joinRoom = () => {
@@ -50,8 +26,14 @@ function HomeScreen() {
             alert("Please enter a valid room code.");
             return;
         }
-        navigate("/waiting");
         socket.emit("join-room", { roomCode });
+        socket.once("room-error", ({ message }) => {
+            alert(message);
+            return ;
+        });
+        socket.once("room-joined", () => {
+            navigate(`/waiting?room=${roomCode}`);
+        });
     };
 
     const handleSetRoom = (e) => {

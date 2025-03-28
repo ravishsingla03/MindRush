@@ -25,7 +25,7 @@ function App(){
    return (
        <>
        <SocketManager></SocketManager>
-    <RouterProvider router={router} />
+        <RouterProvider router={router} />
        </>
    );
     
