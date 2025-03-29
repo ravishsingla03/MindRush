@@ -14,6 +14,12 @@ function QuizScreen() {
   const [timeLeft, setTimeLeft] = useState(10);
   const [isEliminated, setIsEliminated] = useState(false);
 
+  function decodeHTML(html) {
+    let txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+}
+
 
 
   useEffect(() => {
@@ -137,7 +143,7 @@ function QuizScreen() {
       </div>
 
       <div className="question-box">
-        <h2>{(currentQuestion.question)}</h2>
+        <h2>{decodeHTML(currentQuestion.question)}</h2>
       </div>
 
       <div className="options-container">
@@ -148,7 +154,7 @@ function QuizScreen() {
             onClick={() => handleAnswerSelect(option)}
             disabled={selectedAnswer !== null}
           >
-            {option}
+            {decodeHTML(option)}
           </button>
         ))}
       </div>

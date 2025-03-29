@@ -19,8 +19,9 @@ io.on("connection", (socket) => {
 
   socket.on("join-room", ({ roomCode }) => {
     if (rooms[roomCode]) {
-      //todo: if it is not present in any room then add if yes then first remove it from that
 
+      //todo: if it is not present in any room then add if yes then first remove it from that
+      
       rooms[roomCode].players.push(socket.id);
       socket.join(roomCode);
       // console.log(`Player ${socket.id} joined room ${roomCode}`);
@@ -45,7 +46,7 @@ io.on("connection", (socket) => {
     try {
       // Add error handling for fetch
       const response = await fetch(
-        "https://opentdb.com/api.php?amount=10&category=18"
+        "https://opentdb.com/api.php?amount=10&category=18&difficulty=medium"
       );
       const questions = await response.json();
 
@@ -76,12 +77,14 @@ io.on("connection", (socket) => {
 
   socket.on("send-answer", ({roomCode }) => {
     rooms[roomCode].questions.push(socket.id);
+    console.log(rooms[roomCode]);
   });
 
   socket.on("wrong-answer",({roomCode})=>{
     rooms[roomCode].players = rooms[roomCode].players.filter(
       (player) => player !== socket.id
     );
+    console.log(rooms[roomCode]);
     // Check if any players are left in the room
     if (rooms[roomCode].players.length === 0) {
       io.to(roomCode).emit("no-players-left");
@@ -90,9 +93,11 @@ io.on("connection", (socket) => {
   })
 
   socket.on("answer-not-selected", ({ roomCode }) => {
+    if(!rooms[roomCode]) return; // Check if room exists
     rooms[roomCode].players = rooms[roomCode].players.filter(
       (player) => player !== socket.id
     );
+    console.log(rooms[roomCode]);
     // Check if any players are left in the room
     if (rooms[roomCode].players.length === 0) {
       io.to(roomCode).emit("no-players-left");

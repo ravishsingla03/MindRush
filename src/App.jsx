@@ -1,22 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import WaitingScreen from "./routes/WaitingScreen/waitingScreen";
 import HomeScreen from "./routes/HomeScreen/homeScreen";
 import QuizScreen from "./routes/QuizScreen/QuizScreen";
 import { SocketManager } from "./Components/SocketManger";
+import ProtectedRoute from "./Components/protectRoute";
 const router = createBrowserRouter([
-    {
-        path: "/waiting",
-        element: <WaitingScreen></WaitingScreen>
-    },
     {
         path: "/",
         element: <HomeScreen></HomeScreen>
     },
     {
+        path: "/waiting",
+        element: 
+        (
+            <ProtectedRoute>
+                <WaitingScreen />
+            </ProtectedRoute>
+        )
+    },
+    {
         path:"/quiz",
-        element: <QuizScreen></QuizScreen>
+        element: (
+            <ProtectedRoute>
+                <QuizScreen />
+            </ProtectedRoute>
+        )
     }
 ]);
 
@@ -24,7 +34,7 @@ const router = createBrowserRouter([
 function App(){
    return (
        <>
-       <SocketManager></SocketManager>
+       <SocketManager />
         <RouterProvider router={router} />
        </>
    );

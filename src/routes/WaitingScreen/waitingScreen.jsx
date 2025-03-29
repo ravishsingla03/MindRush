@@ -7,6 +7,8 @@ import { socket } from "../../Components/SocketManger";
 
 function WaitingScreen() {
   const navigate = useNavigate();
+
+
   const [searchParams] = useSearchParams();
   const roomCode = searchParams.get('room');
   const [isHost,setIsHost] = useState(true);

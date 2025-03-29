@@ -9,15 +9,16 @@ import { socket, SocketManager } from "../../Components/SocketManger";
 function HomeScreen() {
     const navigate = useNavigate();
     const [roomCode, setRoomCode] = useState("");
-    const [isHost, setIsHost] = useState(false);
-    const [players, setPlayers] = useState([]);
 
+    useEffect(() => {
+        sessionStorage.setItem("enteredFromHome", "true");
+      }, []);
 
     const createRoom = () => {
         socket.emit("create-room");
          socket.once("room-created",({roomCode})=>{
             setRoomCode(roomCode);
-            navigate(`/waiting?room=${roomCode}`);
+            navigate(`/waiting?room=${roomCode}`,{ replace: true });
         })
     };
 
@@ -32,13 +33,12 @@ function HomeScreen() {
             return ;
         });
         socket.once("room-joined", () => {
-            navigate(`/waiting?room=${roomCode}`);
+            navigate(`/waiting?room=${roomCode}`,{ replace: true });
         });
     };
 
     const handleSetRoom = (e) => {
         setRoomCode(e.target.value);
-        console.log(roomCode);
     };
 
     return (
