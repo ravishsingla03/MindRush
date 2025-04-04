@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import "./waitingScreen.scss"; // Import SCSS file
+import "./waitingScreen.css"; // Import SCSS file
 import { socket } from "../../Components/SocketManger";
 
 
@@ -12,8 +12,7 @@ function WaitingScreen() {
   const [searchParams] = useSearchParams();
   const roomCode = searchParams.get('room');
   const [isHost,setIsHost] = useState(true);
-  const [players, setPlayers] = useState([
-  ]);
+  const [players, setPlayers] = useState([]);
 
   
   useEffect(() => {
@@ -21,11 +20,16 @@ function WaitingScreen() {
     socket.emit("send-data", { roomCode });
 
     // Set up listener
-    const handleReceiveData = ({ data }) => {
+    const handleReceiveData = ({ data , playersnames}) => {
       if(data.host[0] !== socket.id){
         setIsHost(false);
       }
-      setPlayers(data.players);
+      console.log(playersnames);
+      var playersnames = data.players.map((player) => {
+        return playersnames[player];
+      });
+      console.log(playersnames);
+      setPlayers(playersnames);
     };
     
 

@@ -10,31 +10,42 @@ function HomeScreen() {
     const navigate = useNavigate();
     const [roomCode, setRoomCode] = useState("");
 
-    useEffect(() => {
-        sessionStorage.setItem("enteredFromHome", "true");
-      }, []);
-
     const createRoom = () => {
-        socket.emit("create-room");
+        var playername = prompt("Enter your name to create a room:")
+        if (playername === null || playername.trim() === "") {
+            alert("Please enter a valid name.");
+            return;
+        }
+        else{
+        socket.emit("create-room",playername);
          socket.once("room-created",({roomCode})=>{
             setRoomCode(roomCode);
             navigate(`/waiting?room=${roomCode}`,{ replace: true });
         })
+        }
+        
     };
 
     const joinRoom = () => {
+        var playername = prompt("Enter your name to Join a room:")
         if (roomCode.trim() === "") {
             alert("Please enter a valid room code.");
             return;
         }
-        socket.emit("join-room", { roomCode });
-        socket.once("room-error", ({ message }) => {
+        if (playername === null || playername.trim() === "") {
+            alert("Please enter a valid name.");
+            return;
+        }
+        else{
+            socket.emit("join-room", { roomCode, playername });
+            socket.once("room-error", ({ message }) => {
             alert(message);
             return ;
         });
         socket.once("room-joined", () => {
             navigate(`/waiting?room=${roomCode}`,{ replace: true });
         });
+        }
     };
 
     const handleSetRoom = (e) => {

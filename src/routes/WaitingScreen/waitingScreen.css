@@ -1,0 +1,127 @@
+.waiting-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #fff;
+}
+
+.waiting-title {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.waiting-text {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.room-code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #4ecca3;
+  letter-spacing: 2px;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+  }
+}
+
+.player-list {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  max-width: 400px;
+  margin: 2rem 0;
+}
+
+.player-item {
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0.5rem 0;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+
+  &:before {
+    content: "👤";
+    margin-right: 10px;
+    font-size: 1.3rem;
+  }
+
+}
+
+.start-button {
+  background: #4ecca3;
+  color: #1a1a2e;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(78, 204, 163, 0.3);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 204, 163, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.waiting-message {
+  color: #4ecca3;
+  font-size: 1.2rem;
+  text-align: center;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 768px) {
+  .waiting-title {
+    font-size: 2rem;
+  }
+
+  .waiting-text {
+    font-size: 1rem;
+  }
+
+  .room-code {
+    font-size: 1.2rem;
+  }
+
+  .start-button {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+  }
+}

@@ -5,7 +5,7 @@ import WaitingScreen from "./routes/WaitingScreen/waitingScreen";
 import HomeScreen from "./routes/HomeScreen/homeScreen";
 import QuizScreen from "./routes/QuizScreen/QuizScreen";
 import { SocketManager } from "./Components/SocketManger";
-import ProtectedRoute from "./Components/protectRoute";
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -15,17 +15,17 @@ const router = createBrowserRouter([
         path: "/waiting",
         element: 
         (
-            <ProtectedRoute>
+
                 <WaitingScreen />
-            </ProtectedRoute>
+
         )
     },
     {
         path:"/quiz",
         element: (
-            <ProtectedRoute>
+
                 <QuizScreen />
-            </ProtectedRoute>
+            
         )
     }
 ]);

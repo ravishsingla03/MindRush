@@ -5,19 +5,22 @@ const io = require("socket.io")(5000, {
 });
 
 const rooms = {}; // Store rooms and players
+const playersmap = {}; // Store players and their room codes
 
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
-  socket.on("create-room", () => {
+  socket.on("create-room", (playername) => {
+    playersmap[socket.id] = playername;
     const roomCode = Math.random().toString(36).substring(7).toUpperCase();
     rooms[roomCode] = { host: [socket.id], players: [socket.id] };
     socket.join(roomCode);
     socket.emit("room-created", { roomCode });
     console.log(rooms);
+    console.log(playersmap);
   });
 
-  socket.on("join-room", ({ roomCode }) => {
+  socket.on("join-room", ({ roomCode ,playername }) => {
     if (rooms[roomCode]) {
 
       //todo: if it is not present in any room then add if yes then first remove it from that
@@ -30,6 +33,7 @@ io.on("connection", (socket) => {
         players: rooms[roomCode].players,
         roomCode,
       });
+      playersmap[socket.id] = playername;
       io.to(roomCode).emit("room-joined");
     } else {
       socket.emit("room-error", { message: "Room not found" });
@@ -108,7 +112,7 @@ io.on("connection", (socket) => {
   socket.on("send-data", ({ roomCode }) => {
     for (let room in rooms) {
       if (room == roomCode) {
-        io.to(roomCode).emit("recieve-data", { data: rooms[room] });
+        io.to(roomCode).emit("recieve-data", { data: rooms[room] ,playersnames: playersmap });
       }
     }
   });
@@ -116,7 +120,6 @@ io.on("connection", (socket) => {
   // Remove player from rooms when they disconnect
   socket.on("disconnect", () => {
     console.log(`User disconnected: ${socket.id}`);
-
     // Find the room that contains this socket
     const roomCode = Object.keys(rooms).find((code) =>
       rooms[code].players.includes(socket.id)
