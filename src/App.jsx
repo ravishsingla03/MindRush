@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import WaitingScreen from "./routes/WaitingScreen/waitingScreen";
 import HomeScreen from "./routes/HomeScreen/homeScreen";
 import QuizScreen from "./routes/QuizScreen/QuizScreen";
+import ResultsScreen from "./routes/resultsScreen/ResultsScreen";
 import { SocketManager } from "./Components/SocketManger";
 
 const router = createBrowserRouter([
@@ -27,6 +28,9 @@ const router = createBrowserRouter([
                 <QuizScreen />
             
         )
+    },{
+        path:"/results",
+        element: <ResultsScreen />
     }
 ]);
 

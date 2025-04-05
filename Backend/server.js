@@ -5,10 +5,22 @@ const io = require("socket.io")(5000, {
 });
 
 const rooms = {}; // Store rooms and players
-const playersmap = {}; // Store players and their room codes
+
+// {'RoomCode':{host:[],players:[],'questions':""}}
+
+const playersmap = {};
 
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
+
+  socket.on('play-online', (playername) => {
+    playersmap[socket.id] = playername;
+    const roomCode = Math.random().toString(36).substring(7).toUpperCase();
+    rooms[roomCode] = { host: ['Play-online'], players: [socket.id] };
+    socket.join(roomCode);
+    socket.emit("room-created", { roomCode });
+    console.log(rooms);
+  });
 
   socket.on("create-room", (playername) => {
     playersmap[socket.id] = playername;
@@ -17,7 +29,6 @@ io.on("connection", (socket) => {
     socket.join(roomCode);
     socket.emit("room-created", { roomCode });
     console.log(rooms);
-    console.log(playersmap);
   });
 
   socket.on("join-room", ({ roomCode ,playername }) => {
@@ -27,7 +38,7 @@ io.on("connection", (socket) => {
       
       rooms[roomCode].players.push(socket.id);
       socket.join(roomCode);
-      // console.log(`Player ${socket.id} joined room ${roomCode}`);
+
       // Send updated player list to ALL clients in the room
       io.to(roomCode).emit("player-joined", {
         players: rooms[roomCode].players,
@@ -39,6 +50,7 @@ io.on("connection", (socket) => {
       socket.emit("room-error", { message: "Room not found" });
     }
     console.log(rooms);
+
   });
 
   socket.on("start-game", ({ roomCode }) => {
@@ -59,7 +71,7 @@ io.on("connection", (socket) => {
         // Update room with questions and initialize answer arrays
         rooms[roomCode] = {
           ...rooms[roomCode],
-          questions: [],
+          questions: questions,
         };
         // Emit questions to clients
         io.to(roomCode).emit("questions", questions);
@@ -80,8 +92,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send-answer", ({roomCode }) => {
-    rooms[roomCode].questions.push(socket.id);
-    console.log(rooms[roomCode]);
+    // rooms[roomCode].questions.push(socket.id);
+    // console.log(rooms[roomCode]);
   });
 
   socket.on("wrong-answer",({roomCode})=>{
@@ -107,6 +119,7 @@ io.on("connection", (socket) => {
       io.to(roomCode).emit("no-players-left");
       delete rooms[roomCode];
     }
+
   });
 
   socket.on("send-data", ({ roomCode }) => {

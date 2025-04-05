@@ -10,6 +10,21 @@ function HomeScreen() {
     const navigate = useNavigate();
     const [roomCode, setRoomCode] = useState("");
 
+    const playonline = () => {
+        var playername = prompt("Enter your name to create a room:")
+        if (playername === null || playername.trim() === "") {
+            alert("Please enter a valid name.");
+            return;
+        }
+        else{
+            socket.emit("play-online", playername);
+            socket.once("room-created",({roomCode})=>{
+                setRoomCode(roomCode);
+                navigate(`/waiting?room=${roomCode}`,{ replace: true });
+            });
+        }
+    }
+
     const createRoom = () => {
         var playername = prompt("Enter your name to create a room:")
         if (playername === null || playername.trim() === "") {
@@ -23,8 +38,8 @@ function HomeScreen() {
             navigate(`/waiting?room=${roomCode}`,{ replace: true });
         })
         }
-        
     };
+
 
     const joinRoom = () => {
         var playername = prompt("Enter your name to Join a room:")
@@ -59,7 +74,7 @@ function HomeScreen() {
             <h4 className="subtitle">The Ultimate Brain Battle! Think Fast, Stay Last!</h4>
 
             <div className="buttons">
-                <button className="btn">Play Online</button>
+                <button className="btn" onClick={playonline}>Play Online</button>
                 <button onClick={createRoom} className="btn">Create Room</button>
                 <input type="text" placeholder="Enter Room Code" className="input" onChange={handleSetRoom} />
                 <button onClick={joinRoom} className="btn">Join Room</button>
